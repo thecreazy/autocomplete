@@ -1,0 +1,16 @@
+{
+  "name": "autocomplete",
+  "version": "1.0.0",
+  "description": "Autocomplete in pure js",
+  "main": "index.js",
+  "scripts": {
+    "dev": "parcel serve src/index.html",
+    "build": "parcel build src/index.html"
+  },
+  "author": "riccardo canella <canella_riccardo@icloud.com>",
+  "license": "MIT",
+  "dependencies": {
+    "node-sass": "^4.9.3",
+    "parcel-bundler": "^1.9.7"
+  }
+}
