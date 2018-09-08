@@ -1,0 +1,19 @@
+input {
+ width: 100%;
+ height: 56px;
+ color: white;
+ background: transparent;
+ border: none;
+ border-bottom: 1px solid $grey;
+ padding: multiply($default-value, 2);
+ will-change: border-color, box-shadow;
+ outline: none;
+ @include placeholder() {
+  color: white;
+ }
+ &:focus{
+  border: none;
+  border-bottom: 2px solid $primary;
+ }
+
+}

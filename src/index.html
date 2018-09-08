@@ -1,10 +1,14 @@
 <html>
-
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
 <body>
-  <h1 class="title">AutoComplete Me</h1>
-  <input type="text" id="searchBox" 
-  class="search-field" autoFocus />
-  <ul id="searchResults" class="term-list hidden"></ul>
+  <canvas id="beerCanvas"></canvas>
+  <section class="autocomplete">
+   <h1 class="title">Search your beer</h1>
+   <input type="text" id="searchBox" placeholder="Search.." autoFocus />
+   <ul id="searchResults" class="autocomplete__termlist __hidden"></ul>
+  </section>
  <script src="./js/index.js"></script>
 </body>
 

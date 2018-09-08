@@ -1,5 +1,9 @@
 @import './core/normalize';
+@import './core/mixin';
+@import './core/variables';
+@import './core/base';
+@import './core/helpers';
 
-.hidden {
- display: none;
-}
+@import './components/beercanvas';
+@import './components/autocomplete';
+@import './components/input';

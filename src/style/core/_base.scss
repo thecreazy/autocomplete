@@ -1,0 +1,14 @@
+@import url('https://fonts.googleapis.com/css?family=Montserrat');
+
+body{
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle, $primary, $secondary);
+  background-color: $secondary;
+  font-family: 'Montserrat', sans-serif;
+}
+
+h1{
+ color: white;
+}

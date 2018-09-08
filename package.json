@@ -15,6 +15,8 @@
     "concurrently": "^4.0.1",
     "json-server": "^0.14.0",
     "node-sass": "^4.9.3",
-    "parcel-bundler": "^1.9.7"
+    "parcel-bundler": "^1.9.7",
+    "promise-polyfill": "^8.1.0",
+    "whatwg-fetch": "^2.0.4"
   }
 }

@@ -1,7 +1,13 @@
-import utils from '../utils'
+import Promise from 'promise-polyfill';
+import {fetch} from 'whatwg-fetch'
+
+import utils from '../utils';
 const {
- debounce
-} = utils
+ debounce,
+ fillPolifyll
+} = utils;
+
+fillPolifyll()
 
 export default class Autocomplete {
 
@@ -14,6 +20,12 @@ export default class Autocomplete {
   this.input = document.getElementById(elementSelector)
   this.ul = document.getElementById(resultsSelector)
   this.apiUrl = apiUrl
+
+  this.config = {
+   li: '--li',
+   hidden: '__hidden',
+   termlist: 'autocomplete__termlist'
+  }
 
   if (!this.input) console.error('[Autocomplete] No input founded')
   if (!this.ul) console.error('[Autocomplete] No result div founded')
@@ -62,28 +74,29 @@ export default class Autocomplete {
   if (results.length > 0) {
    this.appendResults(results, term)
   } else if (results.length === 0 && !!term) {
-   this.ul.innerHTML = `<li> No results for: <strong> ${term} </strong>`
-   this.ul.classList.remove('hidden')
+   this.ul.innerHTML = `<li class="${this.config.li}"> No results for: <strong> ${term} </strong>`
+   this.ul.classList.remove(this.config.hidden)
   } else {
    this.clearResults();
   }
  }
 
  clearResults() {
-  this.ul.className = "term-list hidden";
+  this.ul.className = `${this.config.termlist} ${this.config.hidden}`;
   this.ul.innerHTML = '';
  }
 
  appendResults(results, term) {
   this.clearResults();
   results.forEach(result => {
-    let element = document.createElement("li")
-    element.innerHTML = `
-     <a target="_blank" href="${result.link}">${result.name.toLowerCase().replace(term,`<strong>${term}</strong>`)}</a>
-    `.trim()
-    this.ul.appendChild(element)
+   let element = document.createElement("li")
+   element.classList.add(this.config.li)
+   element.innerHTML = `
+     <a class="--link" target="_blank" href="${result.link}">${result.name.toLowerCase().replace(term,`<strong>${term}</strong>`)}</a>
+    `
+   this.ul.appendChild(element)
   });
-  this.ul.classList.remove('hidden')
+  this.ul.classList.remove(this.config.hidden)
  }
 
 }
