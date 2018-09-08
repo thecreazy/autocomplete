@@ -169,11 +169,170 @@ module.exports = reloadCSS;
 var reloadCSS = require('_css_loader');
 module.hot.dispose(reloadCSS);
 module.hot.accept(reloadCSS);
-},{"_css_loader":"../node_modules/parcel-bundler/src/builtins/css-loader.js"}],"js/index.js":[function(require,module,exports) {
+},{"_css_loader":"../node_modules/parcel-bundler/src/builtins/css-loader.js"}],"js/utils/index.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = {
+  debounce: function debounce(func, wait, immediate) {
+    var timeout = void 0;
+    return function () {
+      var context = this,
+          args = arguments;
+      var later = function later() {
+        timeout = null;
+        if (!immediate) func.apply(context, args);
+      };
+      var callNow = immediate && !timeout;
+      clearTimeout(timeout);
+      timeout = setTimeout(later, wait);
+      if (callNow) func.apply(context, args);
+    };
+  }
+};
+},{}],"js/components/autocomplete.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _utils = require("../utils");
+
+var _utils2 = _interopRequireDefault(_utils);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var debounce = _utils2.default.debounce;
+
+var Autocomplete = function () {
+  function Autocomplete(_ref) {
+    var _ref$elementSelector = _ref.elementSelector,
+        elementSelector = _ref$elementSelector === undefined ? "searchBox" : _ref$elementSelector,
+        _ref$resultsSelector = _ref.resultsSelector,
+        resultsSelector = _ref$resultsSelector === undefined ? "searchResults" : _ref$resultsSelector,
+        apiUrl = _ref.apiUrl;
+
+    _classCallCheck(this, Autocomplete);
+
+    this.input = document.getElementById(elementSelector);
+    this.ul = document.getElementById(resultsSelector);
+    this.apiUrl = apiUrl;
+
+    if (!this.input) console.error('[Autocomplete] No input founded');
+    if (!this.ul) console.error('[Autocomplete] No result div founded');
+
+    this.attachEvents = this.attachEvents.bind(this);
+    this.attachResults = this.attachResults.bind(this);
+    this.searchFunction = debounce(this.onKeyUp.bind(this), 200);
+    this.search = this.search.bind(this);
+    this.clearResults = this.clearResults.bind(this);
+    this.appendResults = this.appendResults.bind(this);
+
+    this.attachEvents();
+  }
+
+  _createClass(Autocomplete, [{
+    key: "attachEvents",
+    value: function attachEvents() {
+      this.input.addEventListener("keyup", this.searchFunction, false);
+    }
+  }, {
+    key: "onKeyUp",
+    value: function onKeyUp() {
+      var _this = this;
+
+      var inputTerm = this.input.value.toLowerCase();
+      this.search(inputTerm).then(function (_ref2) {
+        var results = _ref2.results,
+            term = _ref2.term;
+        return _this.attachResults(results, term);
+      }).catch(function (err) {
+        return console.log(err);
+      });
+    }
+  }, {
+    key: "search",
+    value: function search(inputTerm) {
+      var _this2 = this;
+
+      return new Promise(function (resolve, reject) {
+        if (!inputTerm) return resolve({
+          results: [],
+          term: ''
+        });
+        return fetch(_this2.apiUrl + "?q=" + inputTerm).then(function (response) {
+          return response.json();
+        }).then(function (data) {
+          return resolve({
+            results: data,
+            term: inputTerm
+          });
+        }).catch(function (err) {
+          return console.log(err);
+        });
+      });
+    }
+  }, {
+    key: "attachResults",
+    value: function attachResults(results, term) {
+      if (results.length > 0) {
+        this.appendResults(results, term);
+      } else if (results.length === 0 && !!term) {
+        this.ul.innerHTML = "<li> No results for: <strong> " + term + " </strong>";
+        this.ul.classList.remove('hidden');
+      } else {
+        this.clearResults();
+      }
+    }
+  }, {
+    key: "clearResults",
+    value: function clearResults() {
+      this.ul.className = "term-list hidden";
+      this.ul.innerHTML = '';
+    }
+  }, {
+    key: "appendResults",
+    value: function appendResults(results, term) {
+      var _this3 = this;
+
+      this.clearResults();
+      results.forEach(function (result) {
+        var element = document.createElement("li");
+        element.innerHTML = ("\n     <a target=\"_blank\" href=\"" + result.link + "\">" + result.name.toLowerCase().replace(term, "<strong>" + term + "</strong>") + "</a>\n    ").trim();
+        _this3.ul.appendChild(element);
+      });
+      this.ul.classList.remove('hidden');
+    }
+  }]);
+
+  return Autocomplete;
+}();
+
+exports.default = Autocomplete;
+},{"../utils":"js/utils/index.js"}],"js/index.js":[function(require,module,exports) {
 'use strict';
 
 require('../style/index.scss');
-},{"../style/index.scss":"style/index.scss"}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+
+var _autocomplete = require('./components/autocomplete');
+
+var _autocomplete2 = _interopRequireDefault(_autocomplete);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+new _autocomplete2.default({
+  elementSelector: "searchBox",
+  resultsSelector: "searchResults",
+  apiUrl: 'http://localhost:3000/beers'
+});
+},{"../style/index.scss":"style/index.scss","./components/autocomplete":"js/components/autocomplete.js"}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 
@@ -202,7 +361,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = '' || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + '54550' + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + '54081' + '/');
   ws.onmessage = function (event) {
     var data = JSON.parse(event.data);
 

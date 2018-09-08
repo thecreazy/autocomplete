@@ -1,0 +1,24 @@
+{
+ "beers":[{
+  "name": "Cask ale",
+  "link": "https://en.wikipedia.org/wiki/Cask_ale#Real_ale"
+ },{
+  "name": "Pale ale",
+  "link": "https://en.wikipedia.org/wiki/Pale_ale"
+ },{
+  "name": "Stout",
+  "link": "https://en.wikipedia.org/wiki/Stout"
+ },{
+  "name": "Mild ale",
+  "link": "https://en.wikipedia.org/wiki/Mild_ale"
+ },{
+  "name": "Wheat beer",
+  "link": "https://en.wikipedia.org/wiki/Wheat_beer"
+ },{
+  "name": "Lambic",
+  "link": "https://en.wikipedia.org/wiki/Lambic"
+ },{
+  "name": "Lager",
+  "link": "https://en.wikipedia.org/wiki/Lager"
+ }]
+}
