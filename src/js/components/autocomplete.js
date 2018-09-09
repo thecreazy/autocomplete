@@ -52,6 +52,7 @@ export default class Autocomplete {
  }
  
  destroyEvents(){
+  //destroy the events attached 
   this.input.removeEventListener("keyup", this.searchFunction);
  }
 

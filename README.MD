@@ -1,3 +1,5 @@
+![beer autocomplete screen](https://github.com/thecreazy/autocomplete/blob/master/mocks/example.png)
+
 # Beer search
 
 Search your favorite beer type.
