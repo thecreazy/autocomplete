@@ -152,9 +152,10 @@ body {
   font-family: 'Montserrat', sans-serif; }
 
 h1 {
-  color: white; }
+  color: #fff;
+  font-size: 2.5em; }
 
-.__hidden {
+.--hidden {
   display: none; }
 
 #beerCanvas {
@@ -178,36 +179,45 @@ h1 {
     padding: 0px;
     margin: 0 auto 2em;
     text-align: left;
-    color: #777;
     background: #fff;
-    border: 1px solid #ddd; }
-    .autocomplete .autocomplete__termlist .--li {
+    border: 1px solid #C4C2C7; }
+    .autocomplete .autocomplete__termlist .__li {
       padding: .5em 0;
-      border-bottom: 1px solid #eee;
+      border-bottom: 1px solid #C4C2C7;
       padding: 8px; }
-      .autocomplete .autocomplete__termlist .--li .--link {
+      .autocomplete .autocomplete__termlist .__li .__link {
         text-decoration: none;
         color: #DA5900;
-        text-transform: capitalize; }
+        text-transform: capitalize;
+        outline-color: #DA5900; }
+  @media only screen and (max-width: 414px) {
+    .autocomplete {
+      top: 0px;
+      transform: translateX(-50%) translateY(10%);
+      width: 90%; }
+      .autocomplete .autocomplete__termlist {
+        max-height: 200px;
+        overflow-y: scroll; } }
 
 input {
   width: 100%;
   height: 56px;
-  color: white;
+  color: #fff;
   background: transparent;
   border: none;
   border-bottom: 1px solid #8d8991;
   padding: 16px;
   will-change: border-color, box-shadow;
-  outline: none; }
+  outline: none;
+  padding: 4px; }
   input::-webkit-input-placeholder {
-    color: white; }
+    color: #fff; }
   input:-moz-placeholder {
-    color: white; }
+    color: #fff; }
   input::-moz-placeholder {
-    color: white; }
+    color: #fff; }
   input:-ms-input-placeholder {
-    color: white; }
+    color: #fff; }
   input:focus {
     border: none;
     border-bottom: 2px solid #FBB600; }

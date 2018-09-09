@@ -1,8 +1,33 @@
 $primary:          #FBB600;
 $secondary:        #DA5900;
 $black:            #1a3040;
-$placeholderColor: #C4C2C7;
+$lightGrey:        #C4C2C7;
+$white:            #fff;
 $grey:             #8d8991;
+$placeholderColor:   $lightGrey;
+
 
 
 $default-value:      8px !default;
+
+$small-screen-down:         414px !default;;
+$medium-screen-down:        767px !default;
+$big-screen-down:           979px !default;
+$huge-screen-down:          1279px !default;
+$tablet-screen-down:        1025px !default;
+
+$small-screen:              415px !default;
+$medium-screen:             768px !default;
+$big-screen:                980px !default;
+$huge-screen:               1280px !default;
+
+$small-and-down:            "only screen and (max-width : #{$small-screen-down})" !default;
+$medium-and-down:           "only screen and (max-width : #{$medium-screen-down})" !default;
+$medium-only:               "only screen and (min-width : #{$small-screen}) and (max-width : #{$medium-screen-down})" !default;
+$medium-and-up:             "only screen and (min-width : #{$medium-screen})" !default;
+$big-and-down:              "only screen and (max-width : #{$big-screen-down})" !default;
+$big-only:                  "only screen and (min-width : #{$medium-screen}) and (max-width : #{$big-screen-down})" !default;
+$big-and-up:                "only screen and (min-width : #{$big-screen})" !default;
+$huge-and-down:             "only screen and (max-width : #{$huge-screen-down})" !default;
+$huge-and-up:               "only screen and (min-width : #{$huge-screen})" !default;
+$tablet-and-down:           "only screen and (max-width : #{$tablet-screen-down})" !default;

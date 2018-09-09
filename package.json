@@ -5,14 +5,18 @@
   "main": "index.js",
   "scripts": {
     "dev": "concurrently 'npm run serve' 'npm run api'",
+    "preprod": "npm run build",
+    "prod": "concurrently 'npm run server' 'npm run api'",
     "serve": "parcel serve src/index.html",
     "api": "json-server --watch mocks/db.json",
-    "build": "parcel build src/index.html"
+    "build": "parcel build src/index.html",
+    "server": "http-server ./dist"
   },
   "author": "riccardo canella <canella_riccardo@icloud.com>",
   "license": "MIT",
   "dependencies": {
     "concurrently": "^4.0.1",
+    "http-server": "^0.11.1",
     "json-server": "^0.14.0",
     "node-sass": "^4.9.3",
     "parcel-bundler": "^1.9.7",

@@ -12,18 +12,30 @@
   padding: 0px;
   margin: 0 auto 2em;
   text-align: left;
-  color: #777;
-  background: #fff;
-  border: 1px solid #ddd;
-  .--li {
+  background: $white;
+  border: 1px solid $lightGrey;
+
+  .__li {
    padding: .5em 0;
-   border-bottom: 1px solid #eee;
+   border-bottom: 1px solid $lightGrey;
    padding: $default-value;
-   .--link{
+
+   .__link {
     text-decoration: none;
     color: $secondary;
     text-transform: capitalize;
+    outline-color: $secondary;
    }
+  }
+ }
+
+ @media #{$small-and-down} {
+  top: 0px;
+  transform: translateX(-50%) translateY(10%);
+  width: 90%;
+  .autocomplete__termlist{
+   max-height: 200px;
+   overflow-y: scroll;
   }
  }
 }

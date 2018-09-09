@@ -427,7 +427,43 @@ Promise._unhandledRejectionFn = function _unhandledRejectionFn(err) {
 };
 
 exports.default = Promise;
-},{"./finally":"../node_modules/promise-polyfill/src/finally.js"}],"../node_modules/whatwg-fetch/fetch.js":[function(require,module,exports) {
+},{"./finally":"../node_modules/promise-polyfill/src/finally.js"}],"../node_modules/promise-polyfill/src/polyfill.js":[function(require,module,exports) {
+var global = arguments[3];
+'use strict';
+
+var _index = require('./index');
+
+var _index2 = _interopRequireDefault(_index);
+
+var _finally = require('./finally');
+
+var _finally2 = _interopRequireDefault(_finally);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/** @suppress {undefinedVars} */
+var globalNS = function () {
+  // the only reliable means to get the global object is
+  // `Function('return this')()`
+  // However, this causes CSP violations in Chrome apps.
+  if (typeof self !== 'undefined') {
+    return self;
+  }
+  if (typeof window !== 'undefined') {
+    return window;
+  }
+  if (typeof global !== 'undefined') {
+    return global;
+  }
+  throw new Error('unable to locate global object');
+}();
+
+if (!('Promise' in globalNS)) {
+  globalNS['Promise'] = _index2.default;
+} else if (!globalNS.Promise.prototype['finally']) {
+  globalNS.Promise.prototype['finally'] = _finally2.default;
+}
+},{"./index":"../node_modules/promise-polyfill/src/index.js","./finally":"../node_modules/promise-polyfill/src/finally.js"}],"../node_modules/whatwg-fetch/fetch.js":[function(require,module,exports) {
 (function(self) {
   'use strict';
 
@@ -951,11 +987,9 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _promisePolyfill = require('promise-polyfill');
+require('promise-polyfill/src/polyfill');
 
-var _promisePolyfill2 = _interopRequireDefault(_promisePolyfill);
-
-var _whatwgFetch = require('whatwg-fetch');
+require('whatwg-fetch');
 
 var _utils = require('../utils');
 
@@ -963,11 +997,13 @@ var _utils2 = _interopRequireDefault(_utils);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } } //ie10+ polifyll
+
 
 var debounce = _utils2.default.debounce,
     fillPolifyll = _utils2.default.fillPolifyll;
 
+//ie11 polifyll for Array.fill()
 
 fillPolifyll();
 
@@ -985,22 +1021,27 @@ var Autocomplete = function () {
     this.ul = document.getElementById(resultsSelector);
     this.apiUrl = apiUrl;
 
+    //configuration for classes
     this.config = {
-      li: '--li',
-      hidden: '__hidden',
-      termlist: 'autocomplete__termlist'
+      li: '__li',
+      hidden: '--hidden',
+      termlist: 'autocomplete__termlist',
+      link: '__link'
     };
 
     if (!this.input) console.error('[Autocomplete] No input founded');
     if (!this.ul) console.error('[Autocomplete] No result div founded');
 
+    //automatic bind the function for the context
     this.attachEvents = this.attachEvents.bind(this);
+    this.destroyEvents = this.destroyEvents.bind(this);
     this.attachResults = this.attachResults.bind(this);
     this.searchFunction = debounce(this.onKeyUp.bind(this), 200);
     this.search = this.search.bind(this);
     this.clearResults = this.clearResults.bind(this);
     this.appendResults = this.appendResults.bind(this);
 
+    //attach the keyupevent
     this.attachEvents();
   }
 
@@ -1008,6 +1049,11 @@ var Autocomplete = function () {
     key: 'attachEvents',
     value: function attachEvents() {
       this.input.addEventListener("keyup", this.searchFunction, false);
+    }
+  }, {
+    key: 'destroyEvents',
+    value: function destroyEvents() {
+      this.input.removeEventListener("keyup", this.searchFunction);
     }
   }, {
     key: 'onKeyUp',
@@ -1028,12 +1074,12 @@ var Autocomplete = function () {
     value: function search(inputTerm) {
       var _this2 = this;
 
-      return new _promisePolyfill2.default(function (resolve, reject) {
+      return new Promise(function (resolve, reject) {
         if (!inputTerm) return resolve({
           results: [],
           term: ''
         });
-        return (0, _whatwgFetch.fetch)(_this2.apiUrl + '?q=' + inputTerm).then(function (response) {
+        return fetch(_this2.apiUrl + '?q=' + inputTerm).then(function (response) {
           return response.json();
         }).then(function (data) {
           return resolve({
@@ -1072,7 +1118,7 @@ var Autocomplete = function () {
       results.forEach(function (result) {
         var element = document.createElement("li");
         element.classList.add(_this3.config.li);
-        element.innerHTML = '\n     <a class="--link" target="_blank" href="' + result.link + '">' + result.name.toLowerCase().replace(term, '<strong>' + term + '</strong>') + '</a>\n    ';
+        element.innerHTML = '\n     <a class="' + _this3.config.link + '" target="_blank" href="' + result.link + '">' + result.name.toLowerCase().replace(term, '<strong>' + term + '</strong>') + '</a>\n    ';
         _this3.ul.appendChild(element);
       });
       this.ul.classList.remove(this.config.hidden);
@@ -1083,7 +1129,7 @@ var Autocomplete = function () {
 }();
 
 exports.default = Autocomplete;
-},{"promise-polyfill":"../node_modules/promise-polyfill/src/index.js","whatwg-fetch":"../node_modules/whatwg-fetch/fetch.js","../utils":"js/utils/index.js"}],"js/components/beerCanvas.js":[function(require,module,exports) {
+},{"promise-polyfill/src/polyfill":"../node_modules/promise-polyfill/src/polyfill.js","whatwg-fetch":"../node_modules/whatwg-fetch/fetch.js","../utils":"js/utils/index.js"}],"js/components/beerCanvas.js":[function(require,module,exports) {
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -1141,7 +1187,7 @@ var BeerCanvas = function () {
         _this2.ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2, false);
         _this2.ctx.fill();
         p.y -= p.speed;
-        if (p.y <= -10) p = new particle(_this2.canvas);
+        if (p.y <= -10) p.y = _this2.canvas.height;
       });
     }
   }]);
@@ -1165,13 +1211,17 @@ var _beerCanvas2 = _interopRequireDefault(_beerCanvas);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-new _autocomplete2.default({
+var firstAutocomplete = new _autocomplete2.default({
   elementSelector: "searchBox",
   resultsSelector: "searchResults",
   apiUrl: 'http://localhost:3000/beers'
 });
 
 new _beerCanvas2.default();
+
+window.onbeforeunload = function () {
+  firstAutocomplete.destroyEvents();
+};
 },{"../style/index.scss":"style/index.scss","./components/autocomplete":"js/components/autocomplete.js","./components/beerCanvas":"js/components/beerCanvas.js"}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
@@ -1201,7 +1251,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = '' || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + '63800' + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + '60623' + '/');
   ws.onmessage = function (event) {
     var data = JSON.parse(event.data);
 

@@ -1,5 +1,6 @@
-import Promise from 'promise-polyfill';
-import {fetch} from 'whatwg-fetch'
+//ie10+ polifyll
+import 'promise-polyfill/src/polyfill';
+import 'whatwg-fetch';
 
 import utils from '../utils';
 const {
@@ -7,6 +8,7 @@ const {
  fillPolifyll
 } = utils;
 
+//ie11 polifyll for Array.fill()
 fillPolifyll()
 
 export default class Autocomplete {
@@ -21,27 +23,36 @@ export default class Autocomplete {
   this.ul = document.getElementById(resultsSelector)
   this.apiUrl = apiUrl
 
+  //configuration for classes
   this.config = {
-   li: '--li',
-   hidden: '__hidden',
-   termlist: 'autocomplete__termlist'
+   li: '__li',
+   hidden: '--hidden',
+   termlist: 'autocomplete__termlist',
+   link: '__link'
   }
 
   if (!this.input) console.error('[Autocomplete] No input founded')
   if (!this.ul) console.error('[Autocomplete] No result div founded')
 
+  //automatic bind the function for the context
   this.attachEvents = this.attachEvents.bind(this)
+  this.destroyEvents = this.destroyEvents.bind(this)
   this.attachResults = this.attachResults.bind(this)
   this.searchFunction = debounce(this.onKeyUp.bind(this), 200);
   this.search = this.search.bind(this)
   this.clearResults = this.clearResults.bind(this)
   this.appendResults = this.appendResults.bind(this)
 
+  //attach the keyupevent
   this.attachEvents()
  }
 
  attachEvents() {
   this.input.addEventListener("keyup", this.searchFunction, false);
+ }
+ 
+ destroyEvents(){
+  this.input.removeEventListener("keyup", this.searchFunction);
  }
 
  onKeyUp() {
@@ -92,7 +103,7 @@ export default class Autocomplete {
    let element = document.createElement("li")
    element.classList.add(this.config.li)
    element.innerHTML = `
-     <a class="--link" target="_blank" href="${result.link}">${result.name.toLowerCase().replace(term,`<strong>${term}</strong>`)}</a>
+     <a class="${this.config.link}" target="_blank" href="${result.link}">${result.name.toLowerCase().replace(term,`<strong>${term}</strong>`)}</a>
     `
    this.ul.appendChild(element)
   });

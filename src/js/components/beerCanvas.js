@@ -32,7 +32,7 @@ export default class BeerCanvas {
    this.ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2, false);
    this.ctx.fill();
    p.y -= p.speed;
-   if (p.y <= -10) p = new particle(this.canvas);
+   if (p.y <= -10) p.y = this.canvas.height
   });
  }
 }
